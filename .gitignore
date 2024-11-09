@@ -1,0 +1,40 @@
+# Go binary
+/bin/
+/build/
+
+# Go workspace file
+*.workspace
+
+# Dependency directories
+/vendor/
+
+# Go test binary
+*.test
+
+# Go coverage file
+*.out
+
+# Dependency cache, IDE, and OS-specific files
+.DS_Store
+.idea/
+.vscode/
+
+# Go Modules
+go.sum
+go.mod
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+
+# Environment files (if using dotenv or similar)
+.env
+
+# Binary executables
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
