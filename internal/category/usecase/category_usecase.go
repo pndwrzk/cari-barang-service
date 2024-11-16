@@ -9,19 +9,19 @@ import (
 	"github.com/pndwrzk/cari-barang-service/pkg/utils"
 )
 
-type CategoryUseCase interface {
+type CategoryUsecase interface {
 	RetrieveCategory() ([]*dto.ResponseGetCategory, error)
 	StoreCategory(requestBody dto.RequestBodyCategory) error
 	ModifyCategory(id uint, requestBody dto.RequestBodyCategory) error
 	DestroyCategory(id uint) error
 }
 
-type categoryUseCase struct {
+type categoryUsecase struct {
 	repository repository.CategoryRepository
 }
 
-// DestroyCategory implements CategoryUseCase.
-func (usecase *categoryUseCase) DestroyCategory(id uint) error {
+// DestroyCategory implements CategoryUsecase.
+func (usecase *categoryUsecase) DestroyCategory(id uint) error {
 	// check status category
 	data, err := usecase.repository.ReadByIdCategory(id)
 	if err != nil {
@@ -33,8 +33,8 @@ func (usecase *categoryUseCase) DestroyCategory(id uint) error {
 	return usecase.repository.DeleteByIdCategory(data)
 }
 
-// ModifyCategory implements CategoryUseCase.
-func (usecase *categoryUseCase) ModifyCategory(id uint, requestBody dto.RequestBodyCategory) error {
+// ModifyCategory implements CategoryUsecase.
+func (usecase *categoryUsecase) ModifyCategory(id uint, requestBody dto.RequestBodyCategory) error {
 	category := entity.Category{
 		ID:       id,
 		Name:     requestBody.Name,
@@ -44,8 +44,8 @@ func (usecase *categoryUseCase) ModifyCategory(id uint, requestBody dto.RequestB
 	return usecase.repository.UpdateCategory(category)
 }
 
-// StoreCategory implements CategoryUseCase.
-func (usecase *categoryUseCase) StoreCategory(requestBody dto.RequestBodyCategory) error {
+// StoreCategory implements CategoryUsecase.
+func (usecase *categoryUsecase) StoreCategory(requestBody dto.RequestBodyCategory) error {
 	category := entity.Category{
 		Name:     requestBody.Name,
 		ParentID: requestBody.ParentID,
@@ -54,8 +54,8 @@ func (usecase *categoryUseCase) StoreCategory(requestBody dto.RequestBodyCategor
 	return usecase.repository.CreateCategory(category)
 }
 
-// RetrieveCategory implements CategoryUseCase.
-func (usecase *categoryUseCase) RetrieveCategory() ([]*dto.ResponseGetCategory, error) {
+// RetrieveCategory implements CategoryUsecase.
+func (usecase *categoryUsecase) RetrieveCategory() ([]*dto.ResponseGetCategory, error) {
 	data, err := usecase.repository.ReadCategory()
 	if err != nil {
 		return nil, err
@@ -63,9 +63,9 @@ func (usecase *categoryUseCase) RetrieveCategory() ([]*dto.ResponseGetCategory, 
 	return data, nil
 }
 
-// NewCategoryUseCase creates a new instance of CategoryUseCase.
-func NewCategoryUseCase(repository repository.CategoryRepository) CategoryUseCase {
-	return &categoryUseCase{repository}
+// NewCategoryUsecase creates a new instance of CategoryUsecase.
+func NewCategoryUsecase(repository repository.CategoryRepository) CategoryUsecase {
+	return &categoryUsecase{repository}
 }
 
 // GetAllCategories retrieves all active categories.

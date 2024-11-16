@@ -11,11 +11,11 @@ import (
 )
 
 type CategoryHandler struct {
-	usecase usecase.CategoryUseCase
+	usecase usecase.CategoryUsecase
 }
 
 // Route register all the routes for category module
-func (handler *CategoryHandler) Route(app *fiber.App) {
+func (handler *CategoryHandler) RegisterRoutes(app *fiber.App) {
 	apiV1 := app.Group("/api/v1")
 	apiV1.Get("/categories", handler.fetchCategory)
 	apiV1.Post("/categories", handler.addCategory)
@@ -122,6 +122,6 @@ func (handler *CategoryHandler) removeCategory(app *fiber.Ctx) error {
 
 }
 
-func NewCategoryHandler(usecase usecase.CategoryUseCase) *CategoryHandler {
+func NewCategoryHandler(usecase usecase.CategoryUsecase) *CategoryHandler {
 	return &CategoryHandler{usecase}
 }
