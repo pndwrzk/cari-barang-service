@@ -18,3 +18,7 @@ type RequestUpdateCategory struct {
 	IsActive int    `json:"is_active"`
 	ParentID *uint  `json:"parent_id"`
 }
+
+type RequestUpdateStatusCategory struct {
+	Status int `json:"status"`
+}

@@ -6,6 +6,7 @@ import (
 	"github.com/pndwrzk/cari-barang-service/internal/category/dto"
 	"github.com/pndwrzk/cari-barang-service/internal/category/entity"
 	"github.com/pndwrzk/cari-barang-service/internal/category/repository"
+	"github.com/pndwrzk/cari-barang-service/pkg/constants"
 	"github.com/pndwrzk/cari-barang-service/pkg/utils"
 )
 
@@ -13,11 +14,28 @@ type CategoryUsecase interface {
 	RetrieveCategory() ([]*dto.ResponseGetCategory, error)
 	StoreCategory(requestBody dto.RequestBodyCategory) error
 	ModifyCategory(id uint, requestBody dto.RequestBodyCategory) error
+
+	ModifyCategoryStatus(id uint, requestBody dto.RequestUpdateStatusCategory) error
 	DestroyCategory(id uint) error
 }
 
 type categoryUsecase struct {
 	repository repository.CategoryRepository
+}
+
+// ModifyCategoryStatus implements CategoryUsecase.
+func (usecase *categoryUsecase) ModifyCategoryStatus(id uint, requestBody dto.RequestUpdateStatusCategory) error {
+	data, err := usecase.repository.ReadByIdCategory(id)
+	if err != nil {
+		return err
+	}
+
+	if data.IsActive == requestBody.Status {
+		return errors.New(constants.MESSAGE_UPDATE_STATUS_ERROR)
+	}
+	data.IsActive = requestBody.Status
+	return usecase.repository.UpdateCategory(*data)
+
 }
 
 // DestroyCategory implements CategoryUsecase.

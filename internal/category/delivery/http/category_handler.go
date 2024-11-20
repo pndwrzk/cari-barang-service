@@ -21,6 +21,7 @@ func (handler *CategoryHandler) RegisterRoutes(app *fiber.App) {
 	apiV1.Post("/categories", handler.addCategory)
 	apiV1.Put("/categories/:id", handler.editCategory)
 	apiV1.Delete("/categories/:id", handler.removeCategory)
+	apiV1.Patch("/categories/:id/status", handler.editCategoryStatus)
 
 }
 
@@ -119,6 +120,39 @@ func (handler *CategoryHandler) removeCategory(app *fiber.Ctx) error {
 	}
 
 	return app.Status(fiber.StatusCreated).JSON(response.ProcessDataMessageOnly(constants.SUCCESS_STATUS, constants.MESSAGE_DELETE_SUCCESS))
+
+}
+
+func (handler *CategoryHandler) editCategoryStatus(app *fiber.Ctx) error {
+	var requestBody dto.RequestUpdateStatusCategory
+	id := app.Params("id")
+
+	if err := app.BodyParser(&requestBody); err != nil {
+		return app.Status(fiber.ErrBadRequest.Code).JSON(response.FailureProcess(
+			constants.ERROR_STATUS,
+			constants.MESSAGE_VALIDATION,
+			err.Error(),
+		))
+	}
+
+	uintID, err := utils.StrToUint(id)
+	if err != nil {
+		return app.Status(fiber.StatusInternalServerError).JSON(response.FailureProcess(
+			constants.ERROR_STATUS,
+			constants.MESSAGE_INVALID_PARMS,
+			err.Error(),
+		))
+	}
+
+	if err = handler.usecase.ModifyCategoryStatus(uintID, requestBody); err != nil {
+		return app.Status(fiber.StatusInternalServerError).JSON(response.FailureProcess(
+			constants.ERROR_STATUS,
+			constants.MESSAGE_UPDATE_ERROR,
+			err.Error(),
+		))
+	}
+
+	return app.Status(fiber.StatusCreated).JSON(response.ProcessDataMessageOnly(constants.SUCCESS_STATUS, constants.MESSAGE_UPDATE_SUCCESS))
 
 }
 
